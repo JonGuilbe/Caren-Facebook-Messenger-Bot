@@ -136,7 +136,7 @@ function sendMessage(event) {
   //console.log(text);
     apiai.on('response', (response) => {
   let aiText = response.result.fulfillment.speech;
-  //console.log(aiText);
+  console.log("Sauce is " + response.source);
   if(response.source == 'reddit-img'){
     request({
       url: 'https://graph.facebook.com/v2.6/me/messages',
