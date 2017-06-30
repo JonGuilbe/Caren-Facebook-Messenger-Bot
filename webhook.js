@@ -81,6 +81,7 @@ app.post('/ai', (req, res) => {
       }})
   }
   else if(req.body.result.action === 'reddit'){
+    console.log("We've entered the Reddit Zone...");
     let subreddit = req.body.result.parameters['any'];
     let restUrl = 'https://www.reddit.com/r/'+subreddit+'/top.json';
     request.get(restUrl, (err, response, body) => {
