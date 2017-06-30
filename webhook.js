@@ -137,7 +137,8 @@ function sendMessage(event) {
     apiai.on('response', (response) => {
   let aiText = response.result.fulfillment.speech;
   console.log("Sauce is " + response.result.fulfillment.source);
-  if(response.source == 'reddit-img'){
+  if(response.source === 'reddit-img'){
+    console.log("We did it, Reddit!");
     request({
       url: 'https://graph.facebook.com/v2.6/me/messages',
       qs: {access_token: "***REMOVED***"},
