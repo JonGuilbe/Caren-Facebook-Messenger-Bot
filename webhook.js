@@ -82,8 +82,8 @@ app.post('/ai', (req, res) => {
         let json = JSON.parse(body);
         //console.log(json);
         //console.log(json.data);
-        console.log(json.data.children);
-        let msg = "Testing..."
+        //console.log(json.data.children[0].data.url);
+        let msg = json.data.children[0].data.url;
         return res.json({
           speech: msg,
           displayText: msg,
