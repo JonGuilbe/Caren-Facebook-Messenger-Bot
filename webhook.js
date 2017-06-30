@@ -17,16 +17,8 @@ app.get('/webhook', (req, res) => {
   }
 });
 
-var search = require('youtube-search')
-var opts = {
-  maxResults: 1,
-  key: "***REMOVED***"
-}
-
-
 /* Handling all messenges */
 app.post('/webhook', (req, res) => {
-  console.log(req.body);
   if (req.body.object === 'page') {
     req.body.entry.forEach((entry) => {
       entry.messaging.forEach((event) => {
@@ -82,8 +74,8 @@ app.post('/ai', (req, res) => {
   }
   else if(req.body.result.action === 'reddit'){
     console.log("We've entered the Reddit Zone...");
-    let subreddit = req.body.result.parameters['any'];
-    let restUrl = 'https://www.reddit.com/r/'+subreddit+'/top.json';
+    let subreddit = req.body.result.parameters['any']; //Need to convert spaces to underscores apparently >:(
+    let restUrl = 'https://www.reddit.com/r/'+subreddit+'/top.json?limit=1';
     request.get(restUrl, (err, response, body) => {
       if(!err && response.statusCode == 200){
         let json = JSON.parse(body);
