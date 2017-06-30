@@ -75,7 +75,7 @@ app.post('/ai', (req, res) => {
   else if(req.body.result.action === 'reddit'){
     //console.log("We've entered the Reddit Zone...");
     let subreddit = req.body.result.parameters['any']; //Need to convert spaces to underscores apparently >:(
-    //console.log("Subreddit Recieved: " + subreddit);
+    subreddit = subreddit.replace(/ /g, "_");
     let restUrl = 'https://www.reddit.com/r/'+subreddit+'/top.json?limit=1';
     request.get(restUrl, (err, response, body) => {
       if(!err && response.statusCode == 200){
@@ -97,8 +97,8 @@ app.post('/ai', (req, res) => {
   }
   else if(req.body.result.action === 'reddit-img'){
     //console.log("We've entered the Reddit Zone...");
-    let subreddit = req.body.result.parameters['any']; //Need to convert spaces to underscores apparently >:(
-    //console.log("Subreddit Recieved: " + subreddit);
+    let subreddit = req.body.result.parameters['any'];
+    subreddit = subreddit.replace(/ /g, "_");
     let restUrl = 'https://www.reddit.com/r/'+subreddit+'/top.json?limit=1';
     request.get(restUrl, (err, response, body) => {
       if(!err && response.statusCode == 200){
