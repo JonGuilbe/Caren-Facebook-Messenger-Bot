@@ -73,9 +73,9 @@ app.post('/ai', (req, res) => {
       }})
   }
   else if(req.body.result.action === 'reddit'){
-    console.log("We've entered the Reddit Zone...");
+    //console.log("We've entered the Reddit Zone...");
     let subreddit = req.body.result.parameters['any']; //Need to convert spaces to underscores apparently >:(
-      console.log("Subreddit Recieved: " + subreddit);
+    //console.log("Subreddit Recieved: " + subreddit);
     let restUrl = 'https://www.reddit.com/r/'+subreddit+'/top.json?limit=1';
     request.get(restUrl, (err, response, body) => {
       if(!err && response.statusCode == 200){
@@ -88,6 +88,29 @@ app.post('/ai', (req, res) => {
           speech: msg,
           displayText: msg,
           source: 'reddit'});
+      } else {
+        return res.status(400).json({
+          status: {
+            code: 400,
+            errorType: 'The narwhal did not bacon at midnight...'}});
+      }})
+  }
+  else if(req.body.result.action === 'reddit-img'){
+    //console.log("We've entered the Reddit Zone...");
+    let subreddit = req.body.result.parameters['any']; //Need to convert spaces to underscores apparently >:(
+    //console.log("Subreddit Recieved: " + subreddit);
+    let restUrl = 'https://www.reddit.com/r/'+subreddit+'/top.json?limit=1';
+    request.get(restUrl, (err, response, body) => {
+      if(!err && response.statusCode == 200){
+        let json = JSON.parse(body);
+        //console.log(json);
+        //console.log(json.data);
+        //console.log(json.data.children[0].data.url);
+        let msg = json.data.children[0].data.url;
+        return res.json({
+          speech: msg,
+          displayText: msg,
+          source: 'reddit-img'});
       } else {
         return res.status(400).json({
           status: {
@@ -114,6 +137,29 @@ function sendMessage(event) {
     apiai.on('response', (response) => {
   let aiText = response.result.fulfillment.speech;
   //console.log(aiText);
+  if(response.source == 'reddit-img'){
+    request({
+      url: 'https://graph.facebook.com/v2.6/me/messages',
+      qs: {access_token: "***REMOVED***"},
+      method: 'POST',
+      json: {
+        recipient: {id: sender},
+        message: {"attachment":{
+          "type": "image",
+          "payload":{
+            "url":aiText
+          }
+        }}
+      }
+    }, (error, response) => {
+      if (error) {
+          console.log('Error sending message: ', error);
+      } else if (response.body.error) {
+          console.log('Error: ', response.body.error);
+      }
+    });
+  }
+  else{
     request({
       url: 'https://graph.facebook.com/v2.6/me/messages',
       qs: {access_token: "***REMOVED***"},
@@ -129,6 +175,8 @@ function sendMessage(event) {
           console.log('Error: ', response.body.error);
       }
     });
+  }
+
  });
 
   apiai.on('error', (error) => {
