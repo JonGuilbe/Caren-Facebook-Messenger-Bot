@@ -75,12 +75,13 @@ app.post('/ai', (req, res) => {
   else if(req.body.result.action === 'reddit'){
     console.log("We've entered the Reddit Zone...");
     let subreddit = req.body.result.parameters['any']; //Need to convert spaces to underscores apparently >:(
+      console.log("Subreddit Recieved: " + subreddit);
     let restUrl = 'https://www.reddit.com/r/'+subreddit+'/top.json?limit=1';
     request.get(restUrl, (err, response, body) => {
       if(!err && response.statusCode == 200){
         let json = JSON.parse(body);
-        console.log(json);
-        console.log(json.data);
+        //console.log(json);
+        //console.log(json.data);
         console.log(json.data.children);
         let msg = "Testing..."
         return res.json({
