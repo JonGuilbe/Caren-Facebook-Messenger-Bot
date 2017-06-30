@@ -60,7 +60,7 @@ app.post('/ai', (req, res) => {
             errorType: 'I failed to look up the city name.'}});
       }})
   }
-  if(req.body.result.action === 'youtube'){
+  else if(req.body.result.action === 'youtube'){
     let searchFor = req.body.result.parameters['any'];
     let restUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=' + searchFor + '&type=video&key=***REMOVED***'
 
@@ -80,31 +80,27 @@ app.post('/ai', (req, res) => {
             errorType: 'I failed to look up the video.'}});
       }})
   }
-
-  /*else if(req.body.result.action === 'youtube'){
-    console.log(" S U P E R  T R I G G E R E D");
-    let searchFor = req.body.result.parameters['any'];
-    console.log(searchFor);
-
-    //let json = JSON.parse(search(searchFor, opts, function(err,results){
-      //if(err) return console.log("This is an error : " + err);
-      //return results.link;
-    //}));
-    //let jzone = search(searchFor, opts);
-    //let json = JSON.parse(jzone);
-    //let msg = 'youtube.com/watch?v='+json.items[0].videoId;
-    let msg = function (t) {search(searchFor, opts, function (err, results){
-      console.log(searchFor);
-      t.notOk(err,'no error')
-      results.map(function (r) { console.log(r.link)})
-    })
-    console.log(searchFor);
+  else if(req.body.result.action === 'reddit'){
+    let subreddit = req.body.result.parameters['any'];
+    let restUrl = 'https://www.reddit.com/r/'+subreddit+'/top.json';
+    request.get(restUrl, (err, response, body) => {
+      if(!err && response.statusCode == 200){
+        let json = JSON.parse(body);
+        console.log(json);
+        console.log(json.data);
+        console.log(json.data.children);
+        let msg = "Testing..."
+        return res.json({
+          speech: msg,
+          displayText: msg,
+          source: 'reddit'});
+      } else {
+        return res.status(400).json({
+          status: {
+            code: 400,
+            errorType: 'The narwhal did not bacon at midnight...'}});
+      }})
   }
-    return res.json({
-      speech: msg,
-      displayText: msg,
-      source: 'youtube'});
-  } */
 })
 
 
