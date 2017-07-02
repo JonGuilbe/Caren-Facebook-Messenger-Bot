@@ -118,6 +118,14 @@ app.post('/ai', (req, res) => {
             errorType: 'The narwhal did not bacon at midnight...'}});
       }})
   }
+  else if(req.body.result.action === 'begin-duel'){
+    timeToDuel();
+    msg = "IT'S TIME TO D-D-D-D-D-D-DUEL! Player 1 & 2 set to " + player1LP + "LP";
+    return res.json({
+      speech: msg,
+      displayText: msg,
+      source: 'begin-duel'});
+  }
 })
 
 
@@ -187,3 +195,40 @@ function sendMessage(event) {
 
   apiai.end();
 }
+
+var player1LP = 8000;
+var player2LP = 8000;
+
+function timeToDuel(){
+  console.log("It's time to duel!");
+  player1LP = 8000;
+  player2LP = 8000;
+}
+
+function subtractLP(playerNumber, subtractThis){
+  if(playerNumber == 1){
+    player1LP -= subtractThis;
+  }
+  else{
+    player2LP -= subtractThis;
+  }
+  checkForWin();
+}
+
+function addLP(playerNumber, addThis){
+  if(playerNumber == 1){
+    player1LP += addThis;
+  }
+  else{
+    player2LP += addThis;
+  }
+  checkForWin();
+}
+
+function checkForWin(){
+    if(player1LP < 0)
+        console.log("Player 2 wins!");
+    else if(player2LP < 0)
+        console.log("Player 1 wins!")
+}
+
