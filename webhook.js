@@ -237,10 +237,10 @@ function subtractLP(playerNumber, subtractThis){
 
 function addLP(playerNumber, addThis){
   if(playerNumber == 1){
-    player1LP += addThis;
+    player1LP += Number(addThis);
   }
   else{
-    player2LP += addThis;
+    player2LP += Number(addThis);
   }
   checkForWin();
 }
