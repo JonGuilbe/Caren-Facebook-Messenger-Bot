@@ -130,7 +130,7 @@ app.post('/ai', (req, res) => {
     amount = req.body.result.parameters['number'];
     player = req.body.result.parameters['number1'];
     addLP(player, amount);
-    msg = "Player 1: " + player1LP + "LP. Player 2: " + player2LP + "LP.";
+    msg = "Player 1: " + player1LP + "LP. Player 2: " + player2LP + "LP." + checkForWin();
     return res.json({
       speech: msg,
       displayText: msg,
@@ -140,7 +140,7 @@ app.post('/ai', (req, res) => {
     amount = req.body.result.parameters['number'];
     player = req.body.result.parameters['number1'];
     subtractLP(player, amount);
-    msg = "Player 1: " + player1LP + "LP. Player 2: " + player2LP + "LP.";
+    msg = "Player 1: " + player1LP + "LP. Player 2: " + player2LP + "LP." + checkForWin();
     return res.json({
       speech: msg,
       displayText: msg,
@@ -246,9 +246,11 @@ function addLP(playerNumber, addThis){
 }
 
 function checkForWin(){
-    if(player1LP < 0)
-        console.log("Player 2 wins!");
-    else if(player2LP < 0)
-        console.log("Player 1 wins!")
+    if(player1LP < 1)
+        return("Player 2 wins!");
+    else if(player2LP < 1)
+       return("Player 1 wins!");
+    else
+      return "";
 }
 
