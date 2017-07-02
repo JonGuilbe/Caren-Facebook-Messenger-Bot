@@ -126,6 +126,26 @@ app.post('/ai', (req, res) => {
       displayText: msg,
       source: 'begin-duel'});
   }
+  else if(req.body.result.action === 'add-lp'){
+    amount = req.body.result.parameters['number'];
+    player = req.body.result.parameters['number1'];
+    addLP(player, amount);
+    msg = "Player 1: " + player1LP + "LP. Player 2: " + player2LP + "LP.";
+    return res.json({
+      speech: msg,
+      displayText: msg,
+      source: 'add-lp'});
+  }
+  else if(req.body.result.action === 'subtract-lp'){
+    amount = req.body.result.parameters['number'];
+    player = req.body.result.parameters['number1'];
+    subtractLP(player, amount);
+    msg = "Player 1: " + player1LP + "LP. Player 2: " + player2LP + "LP.";
+    return res.json({
+      speech: msg,
+      displayText: msg,
+      source: 'subtract-lp'});
+  }
 })
 
 
