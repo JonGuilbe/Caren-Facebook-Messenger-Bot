@@ -149,7 +149,7 @@ app.post('/ai', (req, res) => {
   else if(req.body.result.action === 'flip-coin'){
     result = Math.random();
     var message;
-    Console.log("Coin flip result: " + result);
+    console.log("Coin flip result: " + result);
     if(result > 0.5){
       message = "https://thumbs.dreamstime.com/b/closeup-united-states-quarter-coin-heads-12377413.jpg"
     }
