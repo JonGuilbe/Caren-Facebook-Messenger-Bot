@@ -169,7 +169,7 @@ app.post('/ai', (req, res) => {
         let json = JSON.parse(body);
         console.log(json.data[0].attributes.titles.en);
         console.log(json.data[0].attributes.titles.en_jp);
-        let msg = json.data[0].attributes.titles.en + "^" + json.data[0].attributes.posterImage.tiny + "^" + json.data[0].attributes.titles.en_jp + "^" + json.data[0].attributes.slug + "^" + json.data[0].attributes.youtubeVideoId;
+        let msg = json.data[0].attributes.titles.en + "^" + json.data[0].attributes.posterImage.small + "^" + json.data[0].attributes.titles.en_jp + "^" + json.data[0].attributes.slug + "^" + json.data[0].attributes.youtubeVideoId;
         // Gonna have to do some really hacky stuck with this json to make this work....
         return res.json({
           displayText: msg,
@@ -247,13 +247,13 @@ function sendMessage(event) {
               {
                 "title": hackyArray[0],
                 "image_url": hackyArray[1],
-                "subtitle": hackyArray[2],
+                "subtitle": "Japanese Title: " + hackyArray[2],
                 "default_action": {
                   "type": "web_url",
                   "url": "https://kitsu.io/anime/" + hackyArray[3],
                   "messenger_extensions": true,
                   "webview_height_ratio": "tall",
-                  "fallback_url": "https://kitsu.io"
+                  "fallback_url":  "https://kitsu.io/anime/" + hackyArray[3]
                 },
                 "buttons":[
                   {
