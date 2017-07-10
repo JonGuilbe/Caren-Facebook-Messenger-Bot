@@ -233,6 +233,11 @@ function sendMessage(event) {
   //TODO - Add a custom message type for anime that shows its image, the english/japanese titles, and a link to its Kitsu page
   //Message json for text
   else if(source === 'anime-search'){
+    Console.log("----- Anime Debugging!");
+    Console.log(response.result.fulfillment.englishTitle);
+    Console.log(response.result.fulfillment.image);
+    Console.log(response.result.fulfillment.link);
+    Console.log(response.result.fulfillment.trailer);
     request({
       url: 'https://graph.facebook.com/v2.6/me/messages',
       qs: {access_token: "***REMOVED***"},
