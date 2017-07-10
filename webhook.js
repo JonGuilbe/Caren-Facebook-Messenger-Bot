@@ -161,6 +161,26 @@ app.post('/ai', (req, res) => {
       displayText: message,
       source: 'flip-coin'});
   }
+  else if(req.body.result.action === 'anime-search'){
+    let anime = req.body.result.parameters['any'];
+    let restUrl = 'https://kitsu.io/api/edge/anime?page[limit]=1&filter[text]='+anime;
+    request.get(restUrl, (err, response, body) => {
+      if (!err && response.statusCode == 200) {
+        let json = JSON.parse(body);
+        console.log(json.titles.en);
+        console.log(json.titles.jp);
+        let msg = "English Title: " + json.titles.en + "\nJapanese Title: " + json.titles.jp;
+        return res.json({
+          speech: msg,
+          displayText: msg,
+          source: 'anime-search'});
+      } else {
+        return res.status(400).json({
+          status: {
+            code: 400,
+            errorType: 'I failed to look up the anime.'}});
+      }})
+  }
 })
 
 
