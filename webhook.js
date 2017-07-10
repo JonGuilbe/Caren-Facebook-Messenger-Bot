@@ -173,6 +173,11 @@ app.post('/ai', (req, res) => {
         return res.json({
           speech: msg,
           displayText: msg,
+          japaneseTitle: json.data[0].attributes.titles.en_jp,
+          englishTitle = json.data[0].attributes.titles.en,
+          image: json.data[0].attributes.posterImage.tiny,
+          link: json.data[0].attributes.slug,
+          trailer: json.data[0].attributes.youtubeVideoId,
           source: 'anime-search'});
       } else {
         return res.status(400).json({
@@ -225,7 +230,51 @@ function sendMessage(event) {
       }
     });
   }
+  //TODO - Add a custom message type for anime that shows its image, the english/japanese titles, and a link to its Kitsu page
   //Message json for text
+  else if(source === 'anime-search'){
+    request({
+      url: 'https://graph.facebook.com/v2.6/me/messages',
+      qs: {access_token: "***REMOVED***"},
+      method: 'POST',
+      json: {
+        recipient: {id: sender},
+        message: {"attachment":{
+          "type": "template",
+          "payload":{
+            "template_type": generic,
+            "elements":[
+              {
+                "title": response.result.fulfillment.englishTitle,
+                "image_url": response.result.fulfillment.image,
+                "subtitle": response.result.fulfillment.japaneseTitle,
+                "default_action": {
+                  "type": "web_url",
+                  "url": "kitsu.io/anime/" + response.result.fulfillment.link,
+                  "messenger_extensions": true,
+                  "webview_height_ratio": "tall",
+                  "fallback_url": "kitsu.io"
+                },
+                "buttons":[
+                  {
+                    "type":"web_url",
+                    "url": "youtube.com/watch?v=" +  response.result.fulfillment.trailer,
+                    "title": "Watch Trailer"
+                  }
+                ]
+              }
+            ]
+          }
+        }}
+      }
+    }, (error, response) => {
+      if (error) {
+          console.log('Error sending message: ', error);
+      } else if (response.body.error) {
+          console.log('Error: ', response.body.error);
+      }
+    });
+  }
   else{
     request({
       url: 'https://graph.facebook.com/v2.6/me/messages',
