@@ -169,16 +169,11 @@ app.post('/ai', (req, res) => {
         let json = JSON.parse(body);
         console.log(json.data[0].attributes.titles.en);
         console.log(json.data[0].attributes.titles.en_jp);
-        let msg = "English Title: " + json.data[0].attributes.titles.en + "\nJapanese Title: " + json.data[0].attributes.titles.en_jp;
+        let msg = json.data[0].attributes.titles.en + "^" + json.data[0].attributes.posterImage.tiny + "^" + json.data[0].attributes.titles.en_jp + "^" + json.data[0].attributes.slug + "^" + json.data[0].attributes.youtubeVideoId;
         // Gonna have to do some really hacky stuck with this json to make this work....
         return res.json({
           displayText: msg,
           speech: msg,
-          "japaneseTitle": json.data[0].attributes.titles.en_jp,
-          "englishTitle": json.data[0].attributes.titles.en,
-          "image": json.data[0].attributes.posterImage.tiny,
-          "link": json.data[0].attributes.slug,
-          "trailer": json.data[0].attributes.youtubeVideoId,
           source: 'anime-search'});
       } else {
         return res.status(400).json({
@@ -234,6 +229,8 @@ function sendMessage(event) {
   //TODO - Add a custom message type for anime that shows its image, the english/japanese titles, and a link to its Kitsu page
   //Message json for text
   else if(source === 'anime-search'){
+    //This is really, really bad...
+    hackyArray = aiText.split('^');
     console.log("----- Anime Debugging!");
     console.log(response.result.fulfillment);
     request({
@@ -248,12 +245,12 @@ function sendMessage(event) {
             "template_type": "generic",
             "elements":[
               {
-                "title": response.result.fulfillment.speech.englishTitle,
-                "image_url": response.result.fulfillment.speech.image,
-                "subtitle": response.result.fulfillment.speech.japaneseTitle,
+                "title": hackyArray[0],
+                "image_url": hackyArray[1],
+                "subtitle": hackyArray[2],
                 "default_action": {
                   "type": "web_url",
-                  "url": "https://kitsu.io/anime/" + response.result.fulfillment.speech.link,
+                  "url": "https://kitsu.io/anime/" + hackyArray[3],
                   "messenger_extensions": true,
                   "webview_height_ratio": "tall",
                   "fallback_url": "https://kitsu.io"
@@ -261,7 +258,7 @@ function sendMessage(event) {
                 "buttons":[
                   {
                     "type":"web_url",
-                    "url": "https://youtube.com/watch?v=" +  response.result.fulfillment.speech.trailer,
+                    "url": "https://youtube.com/watch?v=" +  hackyArray[4],
                     "title": "Watch Trailer"
                   }
                 ]
