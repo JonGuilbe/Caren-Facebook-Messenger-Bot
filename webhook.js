@@ -234,10 +234,7 @@ function sendMessage(event) {
   //Message json for text
   else if(source === 'anime-search'){
     console.log("----- Anime Debugging!");
-    console.log(response.result.fulfillment.englishTitle);
-    console.log(response.result.fulfillment.image);
-    console.log(response.result.fulfillment.link);
-    console.log(response.result.fulfillment.trailer);
+    console.log(response.result.fulfillment);
     request({
       url: 'https://graph.facebook.com/v2.6/me/messages',
       qs: {access_token: "***REMOVED***"},
