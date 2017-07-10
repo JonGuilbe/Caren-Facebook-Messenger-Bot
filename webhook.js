@@ -174,7 +174,7 @@ app.post('/ai', (req, res) => {
           speech: msg,
           displayText: msg,
           japaneseTitle: json.data[0].attributes.titles.en_jp,
-          englishTitle = json.data[0].attributes.titles.en,
+          englishTitle: json.data[0].attributes.titles.en,
           image: json.data[0].attributes.posterImage.tiny,
           link: json.data[0].attributes.slug,
           trailer: json.data[0].attributes.youtubeVideoId,
