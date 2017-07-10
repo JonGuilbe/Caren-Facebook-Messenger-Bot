@@ -146,6 +146,20 @@ app.post('/ai', (req, res) => {
       displayText: msg,
       source: 'subtract-lp'});
   }
+  else if(req.body.result.action === 'flip-coin'){
+    result = Math.random();
+    var message;
+    if(Math.random > 0.5){
+      message = "https://thumbs.dreamstime.com/b/closeup-united-states-quarter-coin-heads-12377413.jpg"
+    }
+    else{
+      message = "https://images-na.ssl-images-amazon.com/images/I/51NyMaKLydL.jpg"
+    }
+    return res.json({
+      speech: message,
+      displayText: message,
+      source: 'flip-coin'});
+  }
 })
 
 
@@ -166,8 +180,9 @@ function sendMessage(event) {
   let aiText = response.result.fulfillment.speech;
   let source = response.result.fulfillment.source;
   console.log("Sauce is " + source);
-  if(source === 'reddit-img'){
-    console.log("We did it, Reddit!");
+  //Message json for images
+  if(source === 'reddit-img' || source === 'flip-coin'){
+    //console.log("We did it, Reddit!");
     request({
       url: 'https://graph.facebook.com/v2.6/me/messages',
       qs: {access_token: "***REMOVED***"},
@@ -189,6 +204,7 @@ function sendMessage(event) {
       }
     });
   }
+  //Message json for text
   else{
     request({
       url: 'https://graph.facebook.com/v2.6/me/messages',
