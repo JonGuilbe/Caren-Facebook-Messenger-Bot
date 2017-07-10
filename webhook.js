@@ -174,11 +174,11 @@ app.post('/ai', (req, res) => {
         return res.json({
           displayText: msg,
           speech: {
-          japaneseTitle: json.data[0].attributes.titles.en_jp,
-          englishTitle: json.data[0].attributes.titles.en,
-          image: json.data[0].attributes.posterImage.tiny,
-          link: json.data[0].attributes.slug,
-          trailer: json.data[0].attributes.youtubeVideoId},
+          "japaneseTitle": json.data[0].attributes.titles.en_jp,
+          "englishTitle": json.data[0].attributes.titles.en,
+          "image": json.data[0].attributes.posterImage.tiny,
+          "link": json.data[0].attributes.slug,
+          "trailer": json.data[0].attributes.youtubeVideoId},
           source: 'anime-search'});
       } else {
         return res.status(400).json({
