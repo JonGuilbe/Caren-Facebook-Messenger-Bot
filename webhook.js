@@ -167,9 +167,9 @@ app.post('/ai', (req, res) => {
     request.get(restUrl, (err, response, body) => {
       if (!err && response.statusCode == 200) {
         let json = JSON.parse(body);
-        console.log(json.titles.en);
-        console.log(json.titles.jp);
-        let msg = "English Title: " + json.titles.en + "\nJapanese Title: " + json.titles.jp;
+        console.log(json.data[0].attributes.titles.en);
+        console.log(json.data[0].attributes.titles.jp);
+        let msg = "English Title: " + json.data[0].attributes.titles.en + "\nJapanese Title: " + json.data[0].attributes.titles.jp;
         return res.json({
           speech: msg,
           displayText: msg,
