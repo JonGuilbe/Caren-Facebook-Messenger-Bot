@@ -242,7 +242,7 @@ function sendMessage(event) {
         message: {"attachment":{
           "type": "template",
           "payload":{
-            "template_type": generic,
+            "template_type": "generic",
             "elements":[
               {
                 "title": response.result.fulfillment.englishTitle,
