@@ -169,7 +169,7 @@ app.post('/ai', (req, res) => {
         let json = JSON.parse(body);
         console.log(json.data[0].attributes.titles.en);
         console.log(json.data[0].attributes.titles.en_jp);
-        let msg = "English Title: " + json.data[0].attributes.titles.en + "\nJapanese Title: " + json.data[0].attributes.titles.jp;
+        let msg = "English Title: " + json.data[0].attributes.titles.en + "\nJapanese Title: " + json.data[0].attributes.titles.en_jp;
         return res.json({
           speech: msg,
           displayText: msg,
