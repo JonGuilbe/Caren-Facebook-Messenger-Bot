@@ -170,14 +170,15 @@ app.post('/ai', (req, res) => {
         console.log(json.data[0].attributes.titles.en);
         console.log(json.data[0].attributes.titles.en_jp);
         let msg = "English Title: " + json.data[0].attributes.titles.en + "\nJapanese Title: " + json.data[0].attributes.titles.en_jp;
+        // Gonna have to do some really hacky stuck with this json to make this work....
         return res.json({
-          speech: msg,
           displayText: msg,
+          speech: {
           japaneseTitle: json.data[0].attributes.titles.en_jp,
           englishTitle: json.data[0].attributes.titles.en,
           image: json.data[0].attributes.posterImage.tiny,
           link: json.data[0].attributes.slug,
-          trailer: json.data[0].attributes.youtubeVideoId,
+          trailer: json.data[0].attributes.youtubeVideoId},
           source: 'anime-search'});
       } else {
         return res.status(400).json({
@@ -247,12 +248,12 @@ function sendMessage(event) {
             "template_type": "generic",
             "elements":[
               {
-                "title": response.result.fulfillment.englishTitle,
-                "image_url": response.result.fulfillment.image,
-                "subtitle": response.result.fulfillment.japaneseTitle,
+                "title": response.result.fulfillment.speech.englishTitle,
+                "image_url": response.result.fulfillment.speech.image,
+                "subtitle": response.result.fulfillment.speech.japaneseTitle,
                 "default_action": {
                   "type": "web_url",
-                  "url": "https://kitsu.io/anime/" + response.result.fulfillment.link,
+                  "url": "https://kitsu.io/anime/" + response.result.fulfillment.speech.link,
                   "messenger_extensions": true,
                   "webview_height_ratio": "tall",
                   "fallback_url": "https://kitsu.io"
@@ -260,7 +261,7 @@ function sendMessage(event) {
                 "buttons":[
                   {
                     "type":"web_url",
-                    "url": "https://youtube.com/watch?v=" +  response.result.fulfillment.trailer,
+                    "url": "https://youtube.com/watch?v=" +  response.result.fulfillment.speech.trailer,
                     "title": "Watch Trailer"
                   }
                 ]
