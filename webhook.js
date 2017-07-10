@@ -250,15 +250,15 @@ function sendMessage(event) {
                 "subtitle": response.result.fulfillment.japaneseTitle,
                 "default_action": {
                   "type": "web_url",
-                  "url": "kitsu.io/anime/" + response.result.fulfillment.link,
+                  "url": "https://kitsu.io/anime/" + response.result.fulfillment.link,
                   "messenger_extensions": true,
                   "webview_height_ratio": "tall",
-                  "fallback_url": "kitsu.io"
+                  "fallback_url": "https://kitsu.io"
                 },
                 "buttons":[
                   {
                     "type":"web_url",
-                    "url": "youtube.com/watch?v=" +  response.result.fulfillment.trailer,
+                    "url": "https://youtube.com/watch?v=" +  response.result.fulfillment.trailer,
                     "title": "Watch Trailer"
                   }
                 ]
