@@ -1,6 +1,7 @@
 const express = require ('express'); //Import express
 const bodyParser = require("body-parser");  //Import body parser
 const app = express(); //Create the express object
+var keys = require('./keys');
 app.use(bodyParser.json()); //Parse some jsons!
 app.use(bodyParser.urlencoded({extended: true}));   //No idea actually
 
@@ -35,7 +36,7 @@ app.post('/ai', (req, res) => {
   console.log("TRIGGERED REEEEE");
   if(req.body.result.action === 'weather'){
     let city = req.body.result.parameters['geo-city'];
-    let restUrl = 'http://api.openweathermap.org/data/2.5/weather?units=imperial&APPID='+"***REMOVED***"+'&q='+city;
+    let restUrl = 'http://api.openweathermap.org/data/2.5/weather?units=imperial&APPID='+ keys.open_weather_key +'&q='+city;
 
     request.get(restUrl, (err, response, body) => {
       if (!err && response.statusCode == 200) {
@@ -54,7 +55,7 @@ app.post('/ai', (req, res) => {
   }
   else if(req.body.result.action === 'youtube'){
     let searchFor = req.body.result.parameters['any'];
-    let restUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=' + searchFor + '&type=video&key=***REMOVED***'
+    let restUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=' + searchFor + '&type=video&key=' + keys.youtube_key
 
     request.get(restUrl, (err, response, body) => {
       if (!err && response.statusCode == 200) {
@@ -74,7 +75,7 @@ app.post('/ai', (req, res) => {
   }
   else if(req.body.result.action === 'reddit'){
     //console.log("We've entered the Reddit Zone...");
-    let subreddit = req.body.result.parameters['any']; //Need to convert spaces to underscores apparently >:(
+    let subreddit = req.body.result.parameters['any'];
     subreddit = subreddit.replace(/ /g, "_");
     let restUrl = 'https://www.reddit.com/r/'+subreddit+'/top.json?limit=1';
     request.get(restUrl, (err, response, body) => {
@@ -187,7 +188,7 @@ app.post('/ai', (req, res) => {
 
 const request = require('request');
 var ai = require('apiai');
-const apiaiApp = ai("***REMOVED***");
+const apiaiApp = ai(keys.apiaiKey);
 
 function sendMessage(event) {
   //console.log("Funct start");
@@ -207,7 +208,7 @@ function sendMessage(event) {
     //console.log("We did it, Reddit!");
     request({
       url: 'https://graph.facebook.com/v2.6/me/messages',
-      qs: {access_token: "***REMOVED***"},
+      qs: {access_token: keys.fb_access_token},
       method: 'POST',
       json: {
         recipient: {id: sender},
@@ -235,7 +236,7 @@ function sendMessage(event) {
     console.log(response.result.fulfillment);
     request({
       url: 'https://graph.facebook.com/v2.6/me/messages',
-      qs: {access_token: "***REMOVED***"},
+      qs: {access_token: keys.fb_access_token},
       method: 'POST',
       json: {
         recipient: {id: sender},
@@ -278,7 +279,7 @@ function sendMessage(event) {
   else{
     request({
       url: 'https://graph.facebook.com/v2.6/me/messages',
-      qs: {access_token: "***REMOVED***"},
+      qs: {access_token: keys.fb_access_token},
       method: 'POST',
       json: {
         recipient: {id: sender},
