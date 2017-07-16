@@ -1,7 +1,6 @@
 const express = require ('express'); //Import express
 const bodyParser = require("body-parser");  //Import body parser
 const app = express(); //Create the express object
-var keys = require('./keys');
 app.use(bodyParser.json()); //Parse some jsons!
 app.use(bodyParser.urlencoded({extended: true}));
 
