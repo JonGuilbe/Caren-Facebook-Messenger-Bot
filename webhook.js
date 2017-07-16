@@ -36,7 +36,7 @@ app.post('/ai', (req, res) => {
   console.log("TRIGGERED REEEEE");
   if(req.body.result.action === 'weather'){
     let city = req.body.result.parameters['geo-city'];
-    let restUrl = 'http://api.openweathermap.org/data/2.5/weather?units=imperial&APPID='+ keys.open_weather_key +'&q='+city;
+    let restUrl = 'http://api.openweathermap.org/data/2.5/weather?units=imperial&APPID='+ process.env.open_weather_key +'&q='+city;
 
     request.get(restUrl, (err, response, body) => {
       if (!err && response.statusCode == 200) {
@@ -55,7 +55,7 @@ app.post('/ai', (req, res) => {
   }
   else if(req.body.result.action === 'youtube'){
     let searchFor = req.body.result.parameters['any'];
-    let restUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=' + searchFor + '&type=video&key=' + keys.youtube_key
+    let restUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=' + searchFor + '&type=video&key=' + process.env.youtube_key
 
     request.get(restUrl, (err, response, body) => {
       if (!err && response.statusCode == 200) {
@@ -188,7 +188,7 @@ app.post('/ai', (req, res) => {
 
 const request = require('request');
 var ai = require('apiai');
-const apiaiApp = ai(keys.apiaiKey);
+const apiaiApp = ai(process.env.apiaiKey);
 
 function sendMessage(event) {
   //console.log("Funct start");
@@ -208,7 +208,7 @@ function sendMessage(event) {
     //console.log("We did it, Reddit!");
     request({
       url: 'https://graph.facebook.com/v2.6/me/messages',
-      qs: {access_token: keys.fb_access_token},
+      qs: {access_token: process.env.fb_access_token},
       method: 'POST',
       json: {
         recipient: {id: sender},
@@ -236,7 +236,7 @@ function sendMessage(event) {
     console.log(response.result.fulfillment);
     request({
       url: 'https://graph.facebook.com/v2.6/me/messages',
-      qs: {access_token: keys.fb_access_token},
+      qs: {access_token: process.env.fb_access_token},
       method: 'POST',
       json: {
         recipient: {id: sender},
@@ -279,7 +279,7 @@ function sendMessage(event) {
   else{
     request({
       url: 'https://graph.facebook.com/v2.6/me/messages',
-      qs: {access_token: keys.fb_access_token},
+      qs: {access_token: process.env.fb_access_token},
       method: 'POST',
       json: {
         recipient: {id: sender},
