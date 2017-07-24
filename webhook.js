@@ -195,14 +195,14 @@ app.post('/ai', (req, res) => {
   //This probably won't work
   else if(req.body.result.action === 'dice-roll'){
     var result = 0;
-    if(typeof(req.body.result.parameters['any']) == 'undefined' || req.body.result.parameters['any'] === 'a' || req.body.result.parameters['any'] === '1')
+    if(typeof(req.body.result.parameters['number2']) == 'undefined' || req.body.result.parameters['number2'] === '1')
       result = Math.trunc((Math.random() * req.body.result.parameters['number']) + 1);
     else{
-      for(i = 0; i < req.body.result.parameters['any']; i++){
+      for(i = 0; i < req.body.result.parameters['number2']; i++){
         result += Math.trunc((Math.random() * req.body.result.parameters['number']) + 1);
       }
       if(typeof(req.body.result.parameters['number1']) != 'undefined'){
-        result += req.body.result.parameters['number1'];
+        result += parseInt(req.body.result.parameters['number1']);
         console.log("Added " + req.body.result.parameters['number1'] + " to Result.");
       }
     }
