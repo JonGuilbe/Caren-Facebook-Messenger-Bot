@@ -305,19 +305,13 @@ function sendMessage(event) {
         message: {"attachment":{
           "type": "template",
           "payload":{
-            "template_type": "generic",
-            "elements":[
+            "template_type": "button",
+            "text":hackyArray[1],
+            "buttons":[
               {
-                "title": hackyArray[0] + " Build",
-                "image_url": "media.blizzard.com/heroes/" + hackyArray[0] + "/bust.jpg",
-                "subtitle": hackyArray[1],
-                "default_action": {
-                  "type": "web_url",
-                  "url": hackyArray[2],
-                  "messenger_extensions": true,
-                  "webview_height_ratio": "tall",
-                  "fallback_url":  hackyArray[2]
-                }
+                "type":"web_url",
+                "url":hackyArray[2],
+                "title":"HOTSLog Page for " + hackyArray[0]
               }
             ]
           }
