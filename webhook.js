@@ -1,7 +1,8 @@
+//TODO Clean up this file so that it calls other files. This one is getting too big... Look up some style guides.
 const express = require ('express'); //Import express
 const bodyParser = require("body-parser");  //Import body parser
 const app = express(); //Create the express object
-app.use(bodyParser.json()); //Parse some jsons!
+app.use(bodyParser.json()); //Parse some jsons
 app.use(bodyParser.urlencoded({extended: true}));
 
 const server = app.listen(process.env.PORT || 5000, () => { //Start the server at a given port
@@ -32,7 +33,7 @@ app.post('/webhook', (req, res) => {
 });
 
 app.post('/ai', (req, res) => { 
-  console.log("TRIGGERED REEEEE");
+  console.log("TRIGGERED");
   if(req.body.result.action === 'weather'){
     let city = req.body.result.parameters['geo-city'];
     let restUrl = 'http://api.openweathermap.org/data/2.5/weather?units=imperial&APPID='+ process.env.open_weather_key +'&q='+city;
@@ -73,16 +74,12 @@ app.post('/ai', (req, res) => {
       }})
   }
   else if(req.body.result.action === 'reddit'){
-    //console.log("We've entered the Reddit Zone...");
     let subreddit = req.body.result.parameters['any'];
     subreddit = subreddit.replace(/ /g, "_");
     let restUrl = 'https://www.reddit.com/r/'+subreddit+'/top.json?limit=1';
     request.get(restUrl, (err, response, body) => {
       if(!err && response.statusCode == 200){
         let json = JSON.parse(body);
-        //console.log(json);
-        //console.log(json.data);
-        //console.log(json.data.children[0].data.url);
         let msg = json.data.children[0].data.url;
         return res.json({
           speech: msg,
@@ -96,16 +93,12 @@ app.post('/ai', (req, res) => {
       }})
   }
   else if(req.body.result.action === 'reddit-img'){
-    //console.log("We've entered the Reddit Zone...");
     let subreddit = req.body.result.parameters['any'];
     subreddit = subreddit.replace(/ /g, "_");
     let restUrl = 'https://www.reddit.com/r/'+subreddit+'/top.json?limit=1';
     request.get(restUrl, (err, response, body) => {
       if(!err && response.statusCode == 200){
         let json = JSON.parse(body);
-        //console.log(json);
-        //console.log(json.data);
-        //console.log(json.data.children[0].data.url);
         let msg = json.data.children[0].data.url;
         return res.json({
           speech: msg,
@@ -170,7 +163,6 @@ app.post('/ai', (req, res) => {
         console.log(json.data[0].attributes.titles.en);
         console.log(json.data[0].attributes.titles.en_jp);
         let msg = json.data[0].attributes.titles.en + "^" + json.data[0].attributes.posterImage.small + "^" + json.data[0].attributes.titles.en_jp + "^" + json.data[0].attributes.slug + "^" + json.data[0].attributes.youtubeVideoId;
-        // Gonna have to do some really hacky stuck with this json to make this work....
         return res.json({
           displayText: msg,
           speech: msg,
@@ -200,6 +192,26 @@ app.post('/ai', (req, res) => {
             errorType: 'I failed to look up the hero.'}});
       }})
   }
+  //This probably won't work
+  else if(req.body.result.action === 'dice-roll'){
+    if(req.body.result.parameters['any'].length === 0 || req.body.result.parameters['any'] === 'a' || req.body.result.parameters['any'] === '1')
+      result = Math.trunc((Math.random() * req.body.result.parameters['number']) + 1);
+    else{
+      result = 0;
+      for(i = 0; i < req.body.result.parameters['any']; i++){
+        result += Math.trunc((Math.random() * req.body.result.parameters['number']) + 1);
+      }
+      if(req.body.result.parameters['number1'].length != 0)
+        result += req.body.result.parameters['number1'];
+    }
+    var message;
+    console.log("Dice Roll result: " + result);
+    
+    return res.json({
+      speech: message,
+      displayText: message,
+      source: 'dice-roll'});
+  }  
 })
 
 
@@ -208,21 +220,17 @@ var ai = require('apiai');
 const apiaiApp = ai(process.env.apiaiKey);
 
 function sendMessage(event) {
-  //console.log("Funct start");
   let sender = event.sender.id;
   let text = event.message.text;
-  //console.log(text);
   let apiai = apiaiApp.textRequest(text, {
     sessionId: 'el_psy_congree' // use any arbitrary id
   });
-  //console.log(text);
     apiai.on('response', (response) => {
   let aiText = response.result.fulfillment.speech;
   let source = response.result.fulfillment.source;
   console.log("Sauce is " + source);
   //Message json for images
   if(source === 'reddit-img' || source === 'flip-coin'){
-    //console.log("We did it, Reddit!");
     request({
       url: 'https://graph.facebook.com/v2.6/me/messages',
       qs: {access_token: process.env.fb_access_token},
@@ -306,12 +314,12 @@ function sendMessage(event) {
           "type": "template",
           "payload":{
             "template_type": "button",
-            "text":hackyArray[1],
+            "text":"Here's the top " + hackyArray[0] + " build: " + hackyArray[1],
             "buttons":[
               {
                 "type":"web_url",
                 "url":hackyArray[2],
-                "title":"HOTSLog Page for " + hackyArray[0]
+                "title":"HOTSLog Page" + hackyArray[0]
               }
             ]
           }
