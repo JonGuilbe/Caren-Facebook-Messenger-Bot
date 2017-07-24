@@ -194,14 +194,14 @@ app.post('/ai', (req, res) => {
   }
   //This probably won't work
   else if(req.body.result.action === 'dice-roll'){
-    if(req.body.result.parameters['any'].length === 0 || req.body.result.parameters['any'] === 'a' || req.body.result.parameters['any'] === '1')
+    if(typeof(req.body.result.parameters['any']) == 'undefined' || req.body.result.parameters['any'] === 'a' || req.body.result.parameters['any'] === '1')
       result = Math.trunc((Math.random() * req.body.result.parameters['number']) + 1);
     else{
       result = 0;
       for(i = 0; i < req.body.result.parameters['any']; i++){
         result += Math.trunc((Math.random() * req.body.result.parameters['number']) + 1);
       }
-      if(req.body.result.parameters['number1'].length != 0)
+      if(typeof(req.body.result.parameters['number1']) != 'undefined')
         result += req.body.result.parameters['number1'];
     }
     var message;
@@ -319,7 +319,7 @@ function sendMessage(event) {
               {
                 "type":"web_url",
                 "url":hackyArray[2],
-                "title":"HOTSLog Page" + hackyArray[0]
+                "title":"HOTSLog Build Page"
               }
             ]
           }
