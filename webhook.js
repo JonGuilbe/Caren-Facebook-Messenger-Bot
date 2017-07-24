@@ -201,8 +201,10 @@ app.post('/ai', (req, res) => {
       for(i = 0; i < req.body.result.parameters['any']; i++){
         result += Math.trunc((Math.random() * req.body.result.parameters['number']) + 1);
       }
-      if(typeof(req.body.result.parameters['number1']) != 'undefined')
+      if(typeof(req.body.result.parameters['number1']) != 'undefined'){
         result += req.body.result.parameters['number1'];
+        console.log("Added " + req.body.result.parameters['number1'] + " to Result.");
+      }
     }
     var message = result; // Why?
     console.log("Dice Roll result: " + result);
