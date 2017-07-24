@@ -188,7 +188,7 @@ app.post('/ai', (req, res) => {
     request.get(restUrl, (err, response, body) => {
       if(!err && response.statusCode == 200){
         let json = JSON.parse(body);
-        let msg = hero + "^" + json[hero] + "^hotslogs.com/Sitewide/HeroDetails?Hero=" + hero;
+        let msg = hero + "^" + json[hero] + "^https://hotslogs.com/Sitewide/HeroDetails?Hero=" + hero;
         return res.json({
           displayText: msg,
           speech: msg,
