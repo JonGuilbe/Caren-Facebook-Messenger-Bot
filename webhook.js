@@ -182,6 +182,24 @@ app.post('/ai', (req, res) => {
             errorType: 'I failed to look up the anime.'}});
       }})
   }
+  else if(req.body.result.action === 'hots-build'){
+    let hero = req.body.result.parameters['any']; //Change to capitalize 1st letter, fix names with dots, spaces, and accents.
+    let restUrl = 'http://jonguilbe.us/HOTS/herobuilds.json';
+    request.get(restUrl, (err, response, body) => {
+      if(!err && response.statusCode == 200){
+        let json = JSON.parse(body);
+        let msg = hero + "^" + json[hero] + "^hotslogs.com/Sitewide/HeroDetails?Hero=" + hero;
+        return res.json({
+          displayText: msg,
+          speech: msg,
+          source: 'hots-build'});
+      } else {
+        return res.status(400).json({
+          status: {
+            code: 400,
+            errorType: 'I failed to look up the hero.'}});
+      }})
+  }
 })
 
 
@@ -226,10 +244,8 @@ function sendMessage(event) {
       }
     });
   }
-  //TODO - Add a custom message type for anime that shows its image, the english/japanese titles, and a link to its Kitsu page
-  //Message json for text
   else if(source === 'anime-search'){
-    //This is really, really bad...
+    //This is really, really bad, probably.
     hackyArray = aiText.split('^');
     console.log("----- Anime Debugging!");
     console.log(response.result.fulfillment);
@@ -262,6 +278,46 @@ function sendMessage(event) {
                     "title": "Watch Trailer"
                   }
                 ]
+              }
+            ]
+          }
+        }}
+      }
+    }, (error, response) => {
+      if (error) {
+          console.log('Error sending message: ', error);
+      } else if (response.body.error) {
+          console.log('Error: ', response.body.error);
+      }
+    });
+  }
+  else if(source === 'hots-build'){
+    //This is really, really bad, probably pt2
+    hackyArray = aiText.split('^');
+    console.log("----- Hero Debugging!");
+    console.log(response.result.fulfillment);
+    request({
+      url: 'https://graph.facebook.com/v2.6/me/messages',
+      qs: {access_token: process.env.fb_access_token},
+      method: 'POST',
+      json: {
+        recipient: {id: sender},
+        message: {"attachment":{
+          "type": "template",
+          "payload":{
+            "template_type": "generic",
+            "elements":[
+              {
+                "title": hackyArray[0] + " Build",
+                "image_url": "media.blizzard.com/heroes/" + hackyArray[0] + "/bust.jpg",
+                "subtitle": hackyArray[1],
+                "default_action": {
+                  "type": "web_url",
+                  "url": hackyArray[2],
+                  "messenger_extensions": true,
+                  "webview_height_ratio": "tall",
+                  "fallback_url":  hackyArray[2]
+                }
               }
             ]
           }
